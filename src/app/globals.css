@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-almarai), "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cairo), "Segoe UI", ui-sans-serif, sans-serif;
+  --font-amiri: var(--font-amiri), serif;
+
+  --color-ink: #102622;
+  --color-ink-soft: #46615b;
+  --color-cream: #fbf8f1;
+  --color-sand: #f2ecdf;
+  --color-teal-dark: #062b28;
+  --color-teal-deep: #0a443e;
+  --color-teal: #0f6b5e;
+  --color-teal-soft: #3fa08f;
+  --color-mint: #e4f2ee;
+  --color-gold: #e3a82f;
+  --color-gold-light: #f4d787;
+  --color-rose-soft: #b4436c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-teal-dark);
+}
+
+/* ─── شريط التمرير ─── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-teal) 70%, white);
+  border-radius: 99px;
+  border: 2px solid var(--color-cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-teal);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── طبقة النَّسِيج (Grain) ─── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+/* ─── خلفية نقوش زائد ─── */
+.plus-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 18h4v4h4v4h-4v4h-4v-4h-4v-4h4z' fill='%230f6b5e' fill-opacity='0.07'/%3E%3C/svg%3E");
+}
+.plus-pattern-dark {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 18h4v4h4v4h-4v4h-4v-4h-4v-4h4z' fill='%23f4d787' fill-opacity='0.08'/%3E%3C/svg%3E");
+}
+
+/* ─── حركات ─── */
+@keyframes marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+.animate-marquee {
+  animation: marquee-rtl 30s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.animate-float {
+  animation: float-y 5.5s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float-y 8s ease-in-out infinite;
+}
+
+@keyframes ecg-dash {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+.animate-ecg {
+  stroke-dasharray: 1000;
+  animation: ecg-dash 6s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--color-gold);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.14); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.14); }
+  60% { transform: scale(1); }
+}
+.animate-heartbeat {
+  animation: heartbeat 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.text-shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--color-gold) 20%,
+    #fff6dd 40%,
+    var(--color-gold) 60%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+
+/* زجاجية */
+.glass {
+  background: color-mix(in srgb, white 72%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* إدخال */
+.field {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1.5px solid color-mix(in srgb, var(--color-teal) 18%, white);
+  background: white;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-teal) 14%, transparent);
+}
+.field::placeholder {
+  color: #9db3ae;
+}
