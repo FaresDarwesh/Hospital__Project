@@ -40,9 +40,11 @@ export default function AdminApp() {
   const [shakeKey, setShakeKey] = useState(0);
 
   useEffect(() => {
-    fetch("/api/admin/me")
-      .then((r) => r.json())
-      .then((d) => setAuthed(!!d.authed));
+    // لا نحتفظ بدخول الإدارة عند فتح الصفحة مرة أخرى.
+    // يتم إبطال الكوكي القديمة أولًا لفرض كلمة المرور في كل زيارة.
+    fetch("/api/admin/logout", { method: "POST" })
+      .catch(() => undefined)
+      .finally(() => setAuthed(false));
   }, []);
 
   const login = async () => {

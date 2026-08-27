@@ -104,12 +104,10 @@ export default function AssistantPortal() {
       .then((r) => r.json())
       .then((data) => setDepartments(data.departments ?? []))
       .catch(() => setDepartments([]));
-    fetch("/api/assistant/me")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.authed) setDoctor(data.doctor);
-        setBooting(false);
-      });
+    // لا نعيد استخدام جلسة قديمة؛ كل زيارة لبوابة الطاقم تتطلب كلمة مرور القسم.
+    fetch("/api/assistant/logout", { method: "POST" })
+      .catch(() => undefined)
+      .finally(() => setBooting(false));
   }, []);
 
   // تحميل الحجوزات عند تغيير التاريخ + تحديث تلقائي
