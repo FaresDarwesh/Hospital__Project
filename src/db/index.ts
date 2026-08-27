@@ -15,6 +15,12 @@ export const pool =
   globalForDb.__arenaNextJsPostgresqlPool ??
   new Pool({
     connectionString: databaseUrl,
+    // Vercel Serverless: one short-lived connection per instance.
+    // This prevents exhausting Supabase's pooler connection limit.
+    max: 1,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 5_000,
+    maxUses: 500,
   });
 
 if (process.env.NODE_ENV !== "production") {
