@@ -13,7 +13,8 @@ import { eq } from "drizzle-orm";
 import { DEPARTMENTS, DOCTORS, ensureSeeded } from "@/db/seed";
 import type { DepartmentDTO, DoctorDTO } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+// Public home data can be revalidated instead of querying Supabase on every visitor.
+export const revalidate = 30;
 
 export default async function HomePage() {
   const previewMode = process.env.PREVIEW_MODE === "true";

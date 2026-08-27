@@ -56,5 +56,7 @@ export async function GET(req: Request) {
           slotMinutes: s.slotMinutes,
         })),
     })),
+  }, {
+    headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" },
   });
 }

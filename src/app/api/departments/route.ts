@@ -29,5 +29,7 @@ export async function GET() {
       color: d.color,
       doctorCount: dc,
     })),
+  }, {
+    headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" },
   });
 }
