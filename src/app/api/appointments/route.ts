@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
@@ -217,7 +218,7 @@ export async function POST(req: Request) {
         .orderBy(desc(appointments.queueNumber))
         .limit(1);
 
-      const refCode = `BN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      const refCode = `BN-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
       const rows = await tx
         .insert(appointments)
         .values({
