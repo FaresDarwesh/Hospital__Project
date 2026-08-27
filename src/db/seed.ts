@@ -53,59 +53,10 @@ const SCHEDULES: { code: string; dayOfWeek: number; startTime: string; endTime: 
   { code: "BN-108", dayOfWeek: 4, startTime: "17:00", endTime: "20:00", slotMinutes: 15 },
 ];
 
-let seededRun = false;
-
-export async function ensureSeeded(force = false): Promise<void> {
-  if (seededRun && !force) return;
-  try {
-    const existing = await db
-      .select({ id: departments.id })
-      .from(departments)
-      .limit(1);
-    if (existing.length > 0) {
-      seededRun = true;
-      return;
-    }
-
-    // الأقسام
-    const deptRows = await db.insert(departments).values(DEPARTMENTS).returning();
-    const deptIdByOrder = new Map<number, number>();
-    deptRows.forEach((row, idx) => deptIdByOrder.set(idx + 1, row.id));
-
-    // الأطباء
-    const doctorRows = await db
-      .insert(doctors)
-      .values(
-        DOCTORS.map((d) => ({
-          name: d.name,
-          title: d.title,
-          departmentId: deptIdByOrder.get(d.dept)!,
-          code: d.code,
-          bio: d.bio,
-          image: d.image,
-        }))
-      )
-      .returning();
-    const doctorIdByCode = new Map<string, number>();
-    doctorRows.forEach((row) => doctorIdByCode.set(row.code, row.id));
-
-    // الجداول
-    await db.insert(schedules).values(
-      SCHEDULES.map((s) => ({
-        doctorId: doctorIdByCode.get(s.code)!,
-        dayOfWeek: s.dayOfWeek,
-        startTime: s.startTime,
-        endTime: s.endTime,
-        slotMinutes: s.slotMinutes,
-      }))
-    );
-
-
-    seededRun = true;
-    console.log("Seed completed: مستشفى برج النور الخيري");
-  } catch (err) {
-    console.error("Seeding failed:", err);
-  }
+// لا يتم إدخال أي بيانات تلقائيًا في الإنتاج.
+// الإدارة تضيف الأقسام والأطباء والمواعيد من لوحة التحكم.
+export async function ensureSeeded(_force = false): Promise<void> {
+  return;
 }
 
 // تشغيل مباشر عبر: npx tsx src/db/seed.ts

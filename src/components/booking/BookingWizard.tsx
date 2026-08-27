@@ -604,7 +604,7 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
                 />
 
                 {/* أيام الأسبوعين القادمين */}
-                <div className="no-scrollbar mb-6 flex gap-2.5 overflow-x-auto pb-2">
+                <div className="mb-6 flex gap-2.5 overflow-x-auto pb-3 [scrollbar-width:thin] [scrollbar-color:var(--color-teal)_transparent]">
                   {days.map((d) => {
                     const dow = dayOfWeekOf(d);
                     const works = doctorWorkDays.has(dow);
@@ -642,6 +642,9 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
                     );
                   })}
                 </div>
+                <p className="-mt-3 mb-5 text-center text-[11px] font-bold text-ink-soft sm:hidden">
+                  اسحب أفقيًا لرؤية باقي الأيام
+                </p>
 
                 {/* الساعات */}
                 {!date ? (
@@ -831,7 +834,7 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
         </AnimatePresence>
 
         {/* أزرار التنقل */}
-        <div className="mt-8 flex items-center justify-between">
+        <div className="sticky bottom-3 z-20 mt-8 flex items-center justify-between rounded-2xl border border-teal/10 bg-cream/95 p-2 shadow-xl shadow-teal-deep/10 backdrop-blur-md">
           <button
             onClick={back}
             disabled={step === 1}
