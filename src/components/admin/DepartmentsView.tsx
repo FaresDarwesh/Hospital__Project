@@ -207,7 +207,7 @@ export default function DepartmentsView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] grid place-items-center bg-teal-dark/70 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto overscroll-contain bg-teal-dark/70 p-4 backdrop-blur-sm sm:items-center"
             onClick={() => setShowForm(false)}
           >
             <motion.div
@@ -215,7 +215,7 @@ export default function DepartmentsView() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg rounded-[2rem] bg-white p-7 shadow-2xl"
+              className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[2rem] bg-white p-7 shadow-2xl"
             >
               <div className="mb-5 flex items-center justify-between">
                 <h3 className="font-display text-xl font-black text-teal-dark">

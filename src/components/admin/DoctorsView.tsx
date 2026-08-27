@@ -351,7 +351,7 @@ export default function DoctorsView() {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl rounded-[2rem] bg-white p-6 shadow-2xl sm:p-8"
+              className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-[2rem] bg-white p-6 shadow-2xl sm:p-8"
             >
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="font-display text-xl font-black text-teal-dark">
