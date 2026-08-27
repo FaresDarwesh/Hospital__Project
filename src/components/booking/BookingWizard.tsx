@@ -263,7 +263,7 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
             تم تأكيد حجزك بنجاح
           </h2>
           <p className="relative mt-2 text-ink-soft">
-            شكرًا لثقتكم في مستشفى برج النور الخيرى — نتشرف بخدمتكم
+            شكرًا لثقتكم في مستشفى برج النور الخيري — نتشرف بخدمتكم
           </p>
 
           <div className="relative mt-8 rounded-3xl border-2 border-dashed border-gold/60 bg-gold/5 p-6">

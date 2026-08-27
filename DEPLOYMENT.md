@@ -1,4 +1,4 @@
-# 🚀 دليل النشر الكامل — موقع مستشفى برج النور الخيرى
+# 🚀 دليل النشر الكامل — موقع مستشفى برج النور الخيري
 
 الخطة: **GitHub** (الكود) → **Vercel** (الاستضافة) → **Supabase** (قاعدة البيانات).
 بعد الربط، أي تعديل على الكود في GitHub يُنشر تلقائيًا **بدون أي توقف** للزوار.
@@ -15,7 +15,7 @@
 ```bash
 git init
 git add .
-git commit -m "موقع مستشفى برج النور الخيرى"
+git commit -m "موقع مستشفى برج النور الخيري"
 git branch -M main
 git remote add origin https://github.com/USERNAME/borg-nour-hospital.git
 git push -u origin main

@@ -15,6 +15,8 @@ export const departments = pgTable("departments", {
   description: text("description").notNull().default(""),
   icon: text("icon").notNull().default("stethoscope"),
   color: text("color").notNull().default("#0F6B5E"),
+  // لا نحتفظ بكلمة المرور نفسها؛ نخزن hash فقط.
+  accessPasswordHash: text("access_password_hash").notNull().default(""),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

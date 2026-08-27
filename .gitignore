@@ -28,3 +28,10 @@ next-env.d.ts
 # system
 .idea
 .vscode
+
+# deployment
+.vercel
+
+# coverage and logs
+coverage
+*.log

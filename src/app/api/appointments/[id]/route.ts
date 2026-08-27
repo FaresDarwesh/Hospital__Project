@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { appointments } from "@/db/schema";
-import { getAssistantDoctorId, isAdmin } from "@/lib/auth";
+import { appointments, doctors } from "@/db/schema";
+import { getAssistantDepartmentId, isAdmin } from "@/lib/auth";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -36,8 +36,13 @@ export async function PATCH(req: Request, ctx: Ctx) {
   }
 
   const admin = await isAdmin();
-  const assistantId = await getAssistantDoctorId();
-  if (!admin && assistantId !== appt.doctorId) {
+  const assistantDepartmentId = await getAssistantDepartmentId();
+  let assistantAllowed = false;
+  if (assistantDepartmentId) {
+    const [doctor] = await db.select({ departmentId: doctors.departmentId }).from(doctors).where(eq(doctors.id, appt.doctorId));
+    assistantAllowed = doctor?.departmentId === assistantDepartmentId;
+  }
+  if (!admin && !assistantAllowed) {
     return NextResponse.json(
       { ok: false, message: "غير مصرّح" },
       { status: 401 }

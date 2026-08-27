@@ -151,7 +151,7 @@ export default function AdminApp() {
                 لوحة الإدارة
               </p>
               <p className="text-[10px] font-bold text-gold-light/80">
-                مستشفى برج النور الخيرى
+                مستشفى برج النور الخيري
               </p>
             </div>
           </div>

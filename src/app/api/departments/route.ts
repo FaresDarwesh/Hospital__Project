@@ -2,9 +2,15 @@ import { NextResponse } from "next/server";
 import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { departments, doctors } from "@/db/schema";
-import { ensureSeeded } from "@/db/seed";
+import { DEPARTMENTS, ensureSeeded } from "@/db/seed";
 
 export async function GET() {
+  if (process.env.PREVIEW_MODE === "true") {
+    return NextResponse.json({
+      ok: true,
+      departments: DEPARTMENTS.map((d, index) => ({ id: index + 1, name: d.name, description: d.description, icon: d.icon, color: d.color, doctorCount: 1 })),
+    });
+  }
   await ensureSeeded();
   const rows = await db
     .select({ d: departments, dc: count(doctors.id) })

@@ -145,7 +145,7 @@ export default function Hero() {
           <div className="absolute -inset-4 -rotate-2 rounded-[3rem] bg-gradient-to-bl from-teal/15 to-gold/20" />
           <div className="relative aspect-[4/3.4] overflow-hidden rounded-[2.5rem] shadow-2xl shadow-teal-deep/25 ring-8 ring-white/80">
             <Image
-              src="/images/hospital-tower.jpg"
+              src="/images/hospital-banner.png"
               alt={`برج ${HOSPITAL.name}`}
               fill
               priority
@@ -224,7 +224,7 @@ export default function Hero() {
                 </defs>
                 <text className="fill-gold-light font-bold" fontSize="10.5">
                   <textPath href="#circlePath">
-                    مستشفى برج النور الخيرى · كشف رمزي ·
+                    مستشفى برج النور الخيري · كشف رمزي ·
                   </textPath>
                 </text>
               </svg>

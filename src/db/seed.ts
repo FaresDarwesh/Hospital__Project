@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { db } from "./index";
-import { departments, doctors, schedules, appointments } from "./schema";
-import { generateSlots, nextScheduledDate, todayCairo } from "../lib/time";
+import { departments, doctors, schedules } from "./schema";
+
 
 // العيادات الفعلية بمستشفى برج النور (حسب الدليل الرسمي):
 // باطنة - جراحة - عظام - أسنان - علاج طبيعي - قلب + الأكثر طلبًا
-const DEPARTMENTS = [
+export const DEPARTMENTS = [
   { name: "الباطنة والأمراض العامة", description: "تشخيص ومتابعة أمراض الباطنة والسكر والضغط والجهاز الهضمي بأحدث الأجهزة.", icon: "stethoscope", color: "#0F6B5E" },
   { name: "الجراحة العامة والمناظير", description: "جراحات عامة ومناظير تشخيصية وعلاجية بأيدي استشاريين وبأعلى معايير التعقيم.", icon: "bandage", color: "#8A5CF6" },
   { name: "القلب والأوعية الدموية", description: "كشف متخصص على القلب وشرايينه مع رسم قلب ومتابعة دقيقة لحالات الضغط.", icon: "heart", color: "#B4436C" },
@@ -16,7 +16,7 @@ const DEPARTMENTS = [
   { name: "العلاج الطبيعي والتأهيل", description: "جلسات علاج طبيعي وتأهيل بعد الإصابات والعمليات وعلاج آلام العمود الفقري.", icon: "personstanding", color: "#5DA85D" },
 ];
 
-const DOCTORS = [
+export const DOCTORS = [
   { name: "د. أحمد سامي الشريف", title: "استشاري الباطنة والأمراض العامة", dept: 1, code: "BN-101", image: "/images/dr-1.jpg", bio: "خبرة أكثر من 18 عامًا في تشخيص وعلاج أمراض الباطنة والسكر والضغط." },
   { name: "د. خالد فؤاد الرفاعي", title: "استشاري الجراحة العامة والمناظير", dept: 2, code: "BN-108", image: "/images/dr-8.jpg", bio: "جراحات عامة ومناظير تشخيصية وعلاجية بخبرة تتجاوز 20 عامًا." },
   { name: "د. سارة محمود الخشاب", title: "استشاري أمراض القلب والقسطرة", dept: 3, code: "BN-102", image: "/images/dr-2.jpg", bio: "متخصصة في تشخيص أمراض القلب والشرايين ومتابعة حالات الضغط والقسطرة." },
@@ -51,12 +51,6 @@ const SCHEDULES: { code: string; dayOfWeek: number; startTime: string; endTime: 
   { code: "BN-108", dayOfWeek: 6, startTime: "17:00", endTime: "20:00", slotMinutes: 15 },
   { code: "BN-108", dayOfWeek: 1, startTime: "17:00", endTime: "20:00", slotMinutes: 15 },
   { code: "BN-108", dayOfWeek: 4, startTime: "17:00", endTime: "20:00", slotMinutes: 15 },
-];
-
-const DEMO_PATIENTS: { name: string; phone: string; address: string; age: number; visitType: "new" | "followup" }[] = [
-  { name: "محمود عبد العزيز محمد", phone: "01012345678", address: "أجا — شارع الجمهورية", age: 42, visitType: "new" },
-  { name: "فاطمة الزهراء إبراهيم", phone: "01098765432", address: "أجا — حي السلام", age: 35, visitType: "followup" },
-  { name: "أشرف سيد خليل", phone: "01112340098", address: "ميت غمر — شارع بورسعيد", age: 51, visitType: "new" },
 ];
 
 let seededRun = false;
@@ -106,42 +100,10 @@ export async function ensureSeeded(force = false): Promise<void> {
       }))
     );
 
-    // حجوزات تجريبية لتوضيح نظام الحجز وقائمة الانتظار
-    const today = todayCairo();
-    const demoFor = [
-      { code: "BN-101", days: [0, 2, 4], start: "17:00", step: 15 },
-      { code: "BN-103", days: [0, 2, 3], start: "10:00", step: 15 },
-    ];
-    let demoIdx = 0;
-    for (const d of demoFor) {
-      const doctorId = doctorIdByCode.get(d.code)!;
-      const date = nextScheduledDate(d.days, today);
-      const slots = generateSlots(d.start, "21:00", d.step);
-      for (let i = 0; i < DEMO_PATIENTS.length; i++) {
-        const p = DEMO_PATIENTS[demoIdx % DEMO_PATIENTS.length];
-        const time = slots[i + 2] ?? "18:00";
-        await db.insert(appointments).values({
-          refCode: `BN-D${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-          doctorId,
-          date,
-          time,
-          queueNumber: i + 1,
-          patientName: p.name,
-          phone: p.phone,
-          address: p.address,
-          age: p.age,
-          visitType: p.visitType,
-          status: i === 0 ? "checked_in" : "confirmed",
-        });
-        demoIdx++;
-      }
-    }
 
     seededRun = true;
-    // eslint-disable-next-line no-console
-    console.log("Seed completed: مستشفى برج النور الخيرى");
+    console.log("Seed completed: مستشفى برج النور الخيري");
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error("Seeding failed:", err);
   }
 }

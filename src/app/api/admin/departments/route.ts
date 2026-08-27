@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { appointments, departments, doctors } from "@/db/schema";
-import { isAdmin } from "@/lib/auth";
+import { hashAccessPassword, isAdmin } from "@/lib/auth";
 
 export async function GET() {
   if (!(await isAdmin())) {
@@ -33,6 +33,7 @@ export async function GET() {
       color: d.color,
       doctorCount: dcMap.get(d.id) ?? 0,
       caseCount: ccMap.get(d.id) ?? 0,
+      passwordConfigured: Boolean(d.accessPasswordHash),
     })),
   });
 }
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const name = String(body.name ?? "").trim().slice(0, 80);
   const description = String(body.description ?? "").trim().slice(0, 300);
+  const password = String(body.password ?? "");
   let icon = String(body.icon ?? "stethoscope").trim();
   if (!VALID_ICONS.has(icon)) icon = "stethoscope";
   let color = String(body.color ?? "#0F6B5E").trim();
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
 
   const [created] = await db
     .insert(departments)
-    .values({ name, description, icon, color })
+    .values({ name, description, icon, color, accessPasswordHash: password.length >= 8 ? hashAccessPassword(password) : "" })
     .returning();
 
   return NextResponse.json({ ok: true, department: created }, { status: 201 });

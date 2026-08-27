@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarCheck, Menu, Phone, X } from "lucide-react";
-import { LighthouseIcon } from "./Icons";
 import { HOSPITAL } from "@/lib/hospital";
 
 const LINKS = [
@@ -42,9 +42,14 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* الشعار */}
         <Link href="/" className="group flex items-center gap-3">
-          <span className="relative grid size-11 place-items-center rounded-2xl bg-teal-deep text-gold shadow-lg shadow-teal-deep/25 transition-transform duration-300 group-hover:-rotate-6">
-            <LighthouseIcon size={22} strokeWidth={1.8} />
-            <span className="absolute -top-1 -left-1 size-3 rounded-full bg-gold animate-heartbeat" />
+          <span className="relative grid size-12 place-items-center overflow-hidden rounded-2xl bg-white shadow-lg shadow-teal-deep/25 ring-1 ring-teal/15 transition-transform duration-300 group-hover:-rotate-3">
+            <Image
+              src="/images/hospital-logo.png"
+              alt="شعار مستشفى برج النور الخيري"
+              width={48}
+              height={48}
+              className="size-full object-cover"
+            />
           </span>
           <span className="leading-tight">
             <span className="block font-display text-lg font-800 font-extrabold text-teal-dark">

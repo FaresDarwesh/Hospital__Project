@@ -2,39 +2,27 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { departments, doctors } from "@/db/schema";
-import { getAssistantDoctorId } from "@/lib/auth";
+import { getAssistantDepartmentId } from "@/lib/auth";
 
 export async function GET() {
-  const doctorId = await getAssistantDoctorId();
-  if (!doctorId) {
-    return NextResponse.json({ ok: true, authed: false });
-  }
+  const departmentId = await getAssistantDepartmentId();
+  if (!departmentId) return NextResponse.json({ ok: true, authed: false });
 
-  const [row] = await db
-    .select({
-      d: doctors,
-      deptName: departments.name,
-      deptColor: departments.color,
-    })
-    .from(doctors)
-    .leftJoin(departments, eq(doctors.departmentId, departments.id))
-    .where(eq(doctors.id, doctorId));
-
-  if (!row) {
-    return NextResponse.json({ ok: true, authed: false });
-  }
+  const [department] = await db.select().from(departments).where(eq(departments.id, departmentId));
+  if (!department) return NextResponse.json({ ok: true, authed: false });
+  const [doctor] = await db.select().from(doctors).where(eq(doctors.departmentId, departmentId)).limit(1);
 
   return NextResponse.json({
     ok: true,
     authed: true,
     doctor: {
-      id: row.d.id,
-      name: row.d.name,
-      title: row.d.title,
-      departmentName: row.deptName ?? "",
-      departmentColor: row.deptColor ?? "#0f6b5e",
-      image: row.d.image,
-      code: row.d.code,
+      id: doctor?.id ?? 0,
+      name: `طاقم ${department.name}`,
+      title: "متابعة حجوزات القسم",
+      departmentName: department.name,
+      departmentColor: department.color,
+      image: doctor?.image ?? "/images/doctor-placeholder.jpg",
+      code: `DEPT-${department.id}`,
     },
   });
 }

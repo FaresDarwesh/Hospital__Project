@@ -17,8 +17,8 @@ const PALETTE = [
   "#5DA85D",
 ];
 
-type FormState = { name: string; description: string; icon: string; color: string };
-const EMPTY: FormState = { name: "", description: "", icon: "stethoscope", color: PALETTE[0] };
+type FormState = { name: string; description: string; icon: string; color: string; password: string };
+const EMPTY: FormState = { name: "", description: "", icon: "stethoscope", color: PALETTE[0], password: "" };
 
 export default function DepartmentsView() {
   const [depts, setDepts] = useState<DepartmentDTO[]>([]);
@@ -47,6 +47,14 @@ export default function DepartmentsView() {
     setFormErr("");
     if (form.name.trim().length < 3) {
       setFormErr("اكتب اسم القسم");
+      return;
+    }
+    if (!editing && form.password.length < 8) {
+      setFormErr("كلمة مرور القسم يجب أن تكون 8 أحرف على الأقل");
+      return;
+    }
+    if (editing && form.password.length > 0 && form.password.length < 8) {
+      setFormErr("كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل");
       return;
     }
     setSaving(true);
@@ -145,6 +153,7 @@ export default function DepartmentsView() {
                     setForm({
                       name: d.name,
                       description: d.description,
+                      password: "",
                       icon: d.icon,
                       color: d.color,
                     });
@@ -235,6 +244,17 @@ export default function DepartmentsView() {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
+
+              <p className="mt-4 mb-2 text-xs font-extrabold text-teal-dark">كلمة مرور القسم *</p>
+              <input
+                className="field"
+                type="password"
+                dir="ltr"
+                placeholder={editing ? "اتركها فارغة بدون تغيير" : "8 أحرف على الأقل"}
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+              <p className="mt-1 text-[11px] font-bold text-ink-soft">تُحفظ مشفرة ولا تظهر في لوحة التحكم.</p>
 
               <p className="mt-4 mb-2 text-xs font-extrabold text-teal-dark">الأيقونة</p>
               <div className="flex flex-wrap gap-2">

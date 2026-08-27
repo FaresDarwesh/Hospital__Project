@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Clock,
   KeyRound,
@@ -17,8 +18,14 @@ export default function Footer() {
         {/* عن المستشفى */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-2xl bg-gold text-teal-dark">
-              <LighthouseIcon size={22} strokeWidth={1.8} />
+            <span className="grid size-12 place-items-center overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-white/20">
+              <Image
+                src="/images/hospital-logo.png"
+                alt="شعار مستشفى برج النور الخيري"
+                width={48}
+                height={48}
+                className="size-full object-cover"
+              />
             </span>
             <div className="leading-tight">
               <p className="font-display text-lg font-extrabold text-white">

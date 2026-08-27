@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { departments, doctors } from "@/db/schema";
-import { isAdmin } from "@/lib/auth";
+import { hashAccessPassword, isAdmin } from "@/lib/auth";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -24,6 +24,8 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
   const body = await req.json().catch(() => ({}));
   const updates: Record<string, string> = {};
+  const password = typeof body.password === "string" ? body.password : "";
+  if (password && password.length >= 8) updates.accessPasswordHash = hashAccessPassword(password);
   if (typeof body.name === "string" && body.name.trim().length >= 3)
     updates.name = body.name.trim().slice(0, 80);
   if (typeof body.description === "string")

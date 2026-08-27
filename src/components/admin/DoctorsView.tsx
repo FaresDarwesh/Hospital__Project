@@ -179,10 +179,26 @@ export default function DoctorsView() {
     load();
   };
 
-  const copyCode = (id: number, code: string) => {
-    navigator.clipboard?.writeText(code);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 1500);
+  const copyCode = async (id: number, code: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        textarea.setAttribute("readonly", "true");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch {
+      // Clipboard is optional in restricted preview iframes.
+    }
   };
 
   if (loading) {

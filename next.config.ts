@@ -26,6 +26,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const nextConfig: NextConfig = {
+  // يسمح للمعاينة داخل Arena بالوصول إلى موارد Next.js أثناء التطوير
+  allowedDevOrigins: ["*.e2b.app"],
   async headers() {
     return [
       {

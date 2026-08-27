@@ -62,7 +62,9 @@ const STATUS_STYLE: Record<string, string> = {
 export default function AssistantPortal() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [booting, setBooting] = useState(true);
-  const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
+  const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
+  const [departmentId, setDepartmentId] = useState("");
   const [loginErr, setLoginErr] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -98,6 +100,10 @@ export default function AssistantPortal() {
 
   // التحقق من الجلسة عند الفتح
   useEffect(() => {
+    fetch("/api/departments")
+      .then((r) => r.json())
+      .then((data) => setDepartments(data.departments ?? []))
+      .catch(() => setDepartments([]));
     fetch("/api/assistant/me")
       .then((r) => r.json())
       .then((data) => {
@@ -120,7 +126,7 @@ export default function AssistantPortal() {
     const res = await fetch("/api/assistant/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ departmentId, password }),
     });
     const data = await res.json();
     if (res.ok && data.ok) {
@@ -134,7 +140,7 @@ export default function AssistantPortal() {
   const logout = async () => {
     await fetch("/api/assistant/logout", { method: "POST" });
     setDoctor(null);
-    setCode("");
+    setPassword("");
     setAppointments([]);
   };
 
@@ -179,18 +185,28 @@ export default function AssistantPortal() {
               بوابة الطاقم الطبي
             </h1>
             <p className="mt-2 text-sm leading-7 text-cream/60">
-              أدخل كود الطبيب (مثل: BN-101) لمتابعة حجوزاته وقائمة الانتظار —
-              الكود موجود لدى إدارة المستشفى.
+              اختر القسم واكتب كلمة المرور الخاصة به لمتابعة حجوزات القسم وقائمة الانتظار.
             </p>
 
             <div className="relative mt-6">
+              <select
+                className="mb-3 w-full rounded-2xl border-2 border-white/15 bg-teal-dark px-5 py-4 text-right font-bold text-white outline-none transition focus:border-gold"
+                value={departmentId}
+                onChange={(e) => setDepartmentId(e.target.value)}
+              >
+                <option value="">اختر القسم</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.id}>{department.name}</option>
+                ))}
+              </select>
               <input
-                className="w-full rounded-2xl border-2 border-white/15 bg-white/10 px-5 py-4 text-center font-mono text-xl font-black tracking-[0.3em] text-gold-light outline-none transition placeholder:text-cream/30 focus:border-gold"
+                className="w-full rounded-2xl border-2 border-white/15 bg-white/10 px-5 py-4 text-center text-xl font-black tracking-widest text-gold-light outline-none transition placeholder:text-cream/30 focus:border-gold"
+                type="password"
                 dir="ltr"
-                placeholder="BN-000"
-                maxLength={9}
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                placeholder="كلمة مرور القسم"
+                maxLength={200}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && login()}
               />
             </div>
@@ -201,7 +217,7 @@ export default function AssistantPortal() {
             )}
             <button
               onClick={login}
-              disabled={loggingIn || code.trim().length < 4}
+              disabled={loggingIn || !departmentId || password.length < 1}
               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gold px-6 py-4 text-base font-extrabold text-teal-dark shadow-xl shadow-gold/25 transition hover:-translate-y-0.5 disabled:opacity-40"
             >
               {loggingIn ? (

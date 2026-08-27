@@ -1,8 +1,18 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
-const SECRET = process.env.SESSION_SECRET || "borg-nour-dev-secret-change-me";
-export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Nour@2026#Admin";
+function requiredEnv(name: "SESSION_SECRET" | "ADMIN_PASSWORD"): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} environment variable is required`);
+  return value;
+}
+
+const SECRET = requiredEnv("SESSION_SECRET");
+export const ADMIN_PASSWORD = requiredEnv("ADMIN_PASSWORD");
+
+export function hashAccessPassword(password: string): string {
+  return crypto.createHash("sha256").update(password, "utf8").digest("hex");
+}
 
 const ADMIN_COOKIE = "bn_admin_token";
 const ASSISTANT_COOKIE = "bn_assistant_token";
@@ -50,9 +60,9 @@ export async function setAdminCookie(): Promise<void> {
   });
 }
 
-export async function setAssistantCookie(doctorId: number): Promise<void> {
+export async function setAssistantCookie(departmentId: number): Promise<void> {
   const store = await cookies();
-  store.set(ASSISTANT_COOKIE, signToken(`asst:${doctorId}`), {
+  store.set(ASSISTANT_COOKIE, signToken(`asst-dept:${departmentId}`), {
     httpOnly: true,
     secure: SECURE,
     sameSite: "lax",
@@ -76,10 +86,10 @@ export async function isAdmin(): Promise<boolean> {
   return !!verifyToken(store.get(ADMIN_COOKIE)?.value, "admin");
 }
 
-export async function getAssistantDoctorId(): Promise<number | null> {
+export async function getAssistantDepartmentId(): Promise<number | null> {
   const store = await cookies();
-  const payload = verifyToken(store.get(ASSISTANT_COOKIE)?.value, "asst:");
+  const payload = verifyToken(store.get(ASSISTANT_COOKIE)?.value, "asst-dept:");
   if (!payload) return null;
   const id = Number(payload.split(":")[1]);
-  return Number.isFinite(id) ? id : null;
+  return Number.isInteger(id) && id > 0 ? id : null;
 }

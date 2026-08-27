@@ -6,7 +6,7 @@ import BookingWizard from "@/components/booking/BookingWizard";
 
 export const metadata: Metadata = {
   title: "احجز موعدك",
-  description: "احجز موعدك أونلاين في عيادات مستشفى برج النور الخيرى في أقل من دقيقة.",
+  description: "احجز موعدك أونلاين في عيادات مستشفى برج النور الخيري في أقل من دقيقة.",
 };
 
 export default async function BookPage({
