@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
   // إرسال صور AVIF/WebP مضغوطة للمتصفحات الحديثة، مع تخزينها مؤقتًا مدة طويلة.
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75],
     minimumCacheTTL: 2592000,
   },
   // يسمح للمعاينة داخل Arena بالوصول إلى موارد Next.js أثناء التطوير

@@ -149,7 +149,7 @@ export default function Hero() {
               alt={`برج ${HOSPITAL.name}`}
               fill
               priority
-              quality={78}
+              quality={75}
               className="object-cover"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 88vw, 45vw"
             />

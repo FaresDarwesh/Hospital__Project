@@ -44,7 +44,7 @@ export default function DepartmentsSection({
                     alt={dept.name}
                     fill
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    quality={72}
+                    quality={75}
                     sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 280px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/55 via-teal-dark/10 to-transparent transition-opacity duration-500 group-hover:opacity-70" />

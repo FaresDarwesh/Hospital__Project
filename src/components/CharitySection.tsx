@@ -77,7 +77,7 @@ export default function CharitySection() {
                   alt={`مبنى ${HOSPITAL.name}`}
                   fill
                   className="object-cover"
-                  quality={72}
+                  quality={75}
                   loading="lazy"
                   sizes="(min-width: 1280px) 420px, 35vw"
                 />
