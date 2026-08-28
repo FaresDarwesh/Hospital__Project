@@ -149,8 +149,9 @@ export default function Hero() {
               alt={`برج ${HOSPITAL.name}`}
               fill
               priority
+              quality={78}
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 45vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 88vw, 45vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/40 via-transparent to-transparent" />
           </div>

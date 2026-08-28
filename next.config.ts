@@ -49,6 +49,11 @@ if (process.env.NODE_ENV === "production") {
 const nextConfig: NextConfig = {
   // عدم كشف أن التطبيق مبني باستخدام Next.js في response headers.
   poweredByHeader: false,
+  // إرسال صور AVIF/WebP مضغوطة للمتصفحات الحديثة، مع تخزينها مؤقتًا مدة طويلة.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2592000,
+  },
   // يسمح للمعاينة داخل Arena بالوصول إلى موارد Next.js أثناء التطوير
   allowedDevOrigins: ["*.e2b.app"],
   async headers() {

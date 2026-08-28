@@ -77,7 +77,9 @@ export default function CharitySection() {
                   alt={`مبنى ${HOSPITAL.name}`}
                   fill
                   className="object-cover"
-                  sizes="40vw"
+                  quality={72}
+                  loading="lazy"
+                  sizes="(min-width: 1280px) 420px, 35vw"
                 />
               </div>
               <div className="glass absolute -bottom-6 right-6 left-6 flex items-center justify-between rounded-2xl border border-white/40 p-4 shadow-xl">
