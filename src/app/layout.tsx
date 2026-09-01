@@ -29,6 +29,21 @@ export const metadata: Metadata = {
     template: `%s | ${HOSPITAL.shortName}`,
   },
   description: `${HOSPITAL.name} في ${HOSPITAL.city} — احجز موعدك أونلاين في عيادات الباطنة والقلب والأطفال والعظام والنساء والأسنان والجلدية والأنف والأذن. كشف رمزي ورعاية إنسانية متكاملة.`,
+  metadataBase: new URL("https://hospital-project-five-gray.vercel.app"),
+  openGraph: {
+    type: "website",
+    locale: "ar_EG",
+    siteName: HOSPITAL.name,
+    title: `${HOSPITAL.name} | رعاية تليق بكم`,
+    description: "احجز موعدك أونلاين بسهولة في عيادات مستشفى برج النور الخيري.",
+    images: [{ url: "/images/hospital-banner.png", width: 596, height: 335, alt: "مستشفى برج النور الخيري" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${HOSPITAL.name} | رعاية تليق بكم`,
+    description: "احجز موعدك أونلاين بسهولة في عيادات مستشفى برج النور الخيري.",
+    images: ["/images/hospital-banner.png"],
+  },
 };
 
 export const viewport: Viewport = {

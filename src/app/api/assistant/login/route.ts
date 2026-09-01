@@ -1,9 +1,8 @@
-import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { departments, doctors } from "@/db/schema";
-import { hashAccessPassword, setAssistantCookie } from "@/lib/auth";
+import { setAssistantCookie, verifyAccessPassword } from "@/lib/auth";
 import { clientIp, consumeRateLimit, RATE_LIMIT_MESSAGE } from "@/lib/ratelimit";
 
 export async function POST(req: Request) {
@@ -20,9 +19,7 @@ export async function POST(req: Request) {
   }
 
   const [department] = await db.select().from(departments).where(eq(departments.id, departmentId));
-  const supplied = Buffer.from(hashAccessPassword(password));
-  const stored = department?.accessPasswordHash ? Buffer.from(department.accessPasswordHash) : Buffer.alloc(supplied.length);
-  const valid = supplied.length === stored.length && crypto.timingSafeEqual(supplied, stored);
+  const valid = Boolean(department && verifyAccessPassword(password, department.accessPasswordHash));
   if (!department || !valid) {
     return NextResponse.json({ ok: false, message: "القسم أو كلمة المرور غير صحيحة" }, { status: 401 });
   }

@@ -12,7 +12,24 @@ export const ADMIN_PASSWORD = requiredEnv("ADMIN_PASSWORD");
 export const RECEPTION_PASSWORD = requiredEnv("RECEPTION_PASSWORD");
 
 export function hashAccessPassword(password: string): string {
-  return crypto.createHash("sha256").update(password, "utf8").digest("hex");
+  const salt = crypto.randomBytes(16).toString("hex");
+  const derived = crypto.scryptSync(password, salt, 64, { N: 16384, r: 8, p: 1 }).toString("hex");
+  return `scrypt$${salt}$${derived}`;
+}
+
+export function verifyAccessPassword(password: string, stored: string): boolean {
+  if (stored.startsWith("scrypt$")) {
+    const [, salt, expected] = stored.split("$");
+    if (!salt || !expected) return false;
+    const actual = crypto.scryptSync(password, salt, 64, { N: 16384, r: 8, p: 1 }).toString("hex");
+    const a = Buffer.from(actual, "hex");
+    const b = Buffer.from(expected, "hex");
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  }
+  // دعم مؤقت للـ hashes القديمة إلى أن يغيّر المدير كلمات مرور الأقسام.
+  const a = Buffer.from(crypto.createHash("sha256").update(password, "utf8").digest("hex"));
+  const b = Buffer.from(stored);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 const ADMIN_COOKIE = "bn_admin_token";
