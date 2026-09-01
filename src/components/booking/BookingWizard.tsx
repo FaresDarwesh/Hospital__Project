@@ -602,6 +602,11 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
                   title="اختر اليوم والساعة"
                   sub={`أيام عمل ${doctor.name} — المواعيد المحجوزة تظهر باللون الرمادي`}
                 />
+                {doctor.queueMode === "arrival" && (
+                  <div className="mb-5 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm font-bold leading-7 text-teal-dark">
+                    تنبيه مهم: هذا الطبيب يعمل بنظام أسبقية الحضور. الموعد تقريبي لتنظيم اليوم، وبرجاء الحضور قبل الموعد بـ15 دقيقة وتسجيل الوصول من الاستقبال. في حالة التأخير قد تنتظر 4 أدوار من نفس الطبيب.
+                  </div>
+                )}
 
                 {/* أيام الأسبوعين القادمين */}
                 <div className="mb-6 flex gap-2.5 overflow-x-auto pb-3 [scrollbar-width:thin] [scrollbar-color:var(--color-teal)_transparent]">
@@ -719,6 +724,9 @@ export default function BookingWizard({ initialDeptId, initialDoctorId }: Props)
                   title="بيانات المريض"
                   sub="اكتب بياناتك بدقة لإتمام الحجز — كل الحقول المميزة بنجمة مطلوبة"
                 />
+                <div className="mb-5 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm font-bold leading-7 text-teal-dark">
+                  ملاحظة مهمة: برجاء الحضور قبل الموعد بـ15 دقيقة. في حالة التأخير قد يتم تغيير ترتيب الدخول، وقد تنتظر 4 أدوار من نفس الطبيب.
+                </div>
                 <div className="grid gap-5 rounded-3xl border border-teal/10 bg-white p-6 shadow-lg shadow-teal-deep/5 sm:p-8 md:grid-cols-2">
                   <Field
                     label="الاسم بالكامل"

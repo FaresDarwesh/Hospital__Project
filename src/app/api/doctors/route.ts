@@ -46,6 +46,7 @@ export async function GET(req: Request) {
       image: d.image,
       reservationFee: d.reservationFee,
       active: d.active,
+      queueMode: d.queueMode === "arrival" ? "arrival" : "exact",
       schedules: scheds
         .filter((s) => s.doctorId === d.id)
         .map((s) => ({

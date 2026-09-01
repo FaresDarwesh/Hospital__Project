@@ -29,7 +29,7 @@ const AVATARS = [
   "/images/dr-8.jpg",
 ];
 const TITLES = ["استشاري", "أخصائي", "أستاذ", "مدرس"];
-const SLOT_OPTIONS = [10, 15, 20, 30];
+const SLOT_OPTIONS = [3, 5, 10, 15, 20, 30, 45, 60];
 
 type SchedEdit = {
   dayOfWeek: number;
@@ -46,6 +46,7 @@ type FormState = {
   bio: string;
   image: string;
   active: boolean;
+  queueMode: "exact" | "arrival";
   schedules: SchedEdit[];
 };
 
@@ -57,6 +58,7 @@ const EMPTY_FORM: FormState = {
   bio: "",
   image: AVATARS[0],
   active: true,
+  queueMode: "exact",
   schedules: [{ dayOfWeek: 0, startTime: "17:00", endTime: "21:00", slotMinutes: 15 }],
 };
 
@@ -105,6 +107,7 @@ export default function DoctorsView() {
       bio: d.bio,
       image: d.image || AVATARS[0],
       active: d.active,
+      queueMode: d.queueMode ?? "exact",
       schedules: d.schedules.map((s) => ({
         dayOfWeek: s.dayOfWeek,
         startTime: s.startTime,
@@ -139,6 +142,7 @@ export default function DoctorsView() {
       bio: form.bio.trim(),
       image: form.image,
       active: form.active,
+      queueMode: form.queueMode,
       schedules: form.schedules,
     };
     const res = await fetch(
@@ -398,6 +402,13 @@ export default function DoctorsView() {
                     {depts.map((d) => (
                       <option key={d.id} value={d.id}>{d.name}</option>
                     ))}
+                  </select>
+                </div>
+                <div>
+                  <Label>نظام ترتيب المرضى</Label>
+                  <select className="field" value={form.queueMode} onChange={(e) => setForm({ ...form, queueMode: e.target.value as FormState["queueMode"] })}>
+                    <option value="exact">موعد دقيق</option>
+                    <option value="arrival">أسبقية الحضور (موعد تقريبي)</option>
                   </select>
                 </div>
                 <div>

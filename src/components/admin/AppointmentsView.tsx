@@ -17,12 +17,13 @@ import { formatDateAr, formatTimeAr, todayCairo } from "@/lib/time";
 const toAr = (v: number | string) =>
   String(v).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
 
-const STATUSES = ["confirmed", "checked_in", "completed", "no_show"];
+const STATUSES = ["confirmed", "checked_in", "completed", "late", "no_show"];
 
 const STATUS_STYLE: Record<string, string> = {
   confirmed: "bg-mint text-teal-deep",
   checked_in: "bg-gold/25 text-teal-dark",
   completed: "bg-teal text-white",
+  late: "bg-rose-soft/20 text-rose-soft",
   no_show: "bg-ink/10 text-ink/60",
 };
 

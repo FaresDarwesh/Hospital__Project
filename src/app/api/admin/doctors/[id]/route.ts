@@ -33,6 +33,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
   if (Number.isFinite(Number(body.departmentId)))
     updates.departmentId = Number(body.departmentId);
   if (typeof body.active === "boolean") updates.active = body.active;
+  if (body.queueMode === "arrival" || body.queueMode === "exact") updates.queueMode = body.queueMode;
   if (typeof body.code === "string" && body.code.trim()) {
     const code = body.code.trim().toUpperCase().slice(0, 12);
     if (!/^[A-Z0-9-]{2,12}$/.test(code)) {

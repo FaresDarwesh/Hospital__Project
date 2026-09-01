@@ -32,6 +32,8 @@ export const doctors = pgTable("doctors", {
   image: text("image").notNull().default(""),
   reservationFee: text("reservation_fee").notNull().default("كشف رمزي"),
   active: boolean("active").notNull().default(true),
+  // exact = موعد دقيق، arrival = أسبقية الحضور بموعد تقريبي
+  queueMode: text("queue_mode").notNull().default("exact"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -68,6 +70,7 @@ export const appointments = pgTable(
     visitType: text("visit_type").notNull().default("new"), // new | followup
     notes: text("notes").notNull().default(""),
     status: text("status").notNull().default("confirmed"), // confirmed | checked_in | completed | no_show
+    checkedInAt: timestamp("checked_in_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [

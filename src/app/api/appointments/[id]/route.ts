@@ -16,7 +16,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
   const body = await req.json().catch(() => ({}));
   const status = String(body.status ?? "");
-  const valid = ["confirmed", "checked_in", "completed", "no_show"];
+  const valid = ["confirmed", "checked_in", "completed", "no_show", "late"];
   if (!valid.includes(status)) {
     return NextResponse.json(
       { ok: false, message: "حالة غير صالحة" },
@@ -51,7 +51,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
   const [updated] = await db
     .update(appointments)
-    .set({ status })
+    .set({ status, checkedInAt: status === "checked_in" ? new Date() : status === "confirmed" ? null : appt.checkedInAt })
     .where(eq(appointments.id, apptId))
     .returning();
 

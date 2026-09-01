@@ -7,7 +7,7 @@ import type { AppointmentDTO, DepartmentDTO, DoctorDTO } from "@/lib/types";
 import { STATUS_LABELS } from "@/lib/types";
 
 type Slot = { time: string; booked: boolean };
-const statusStyle: Record<string, string> = { confirmed: "bg-mint text-teal-deep", checked_in: "bg-gold/25 text-teal-dark", completed: "bg-teal text-white", no_show: "bg-ink/10 text-ink/60" };
+const statusStyle: Record<string, string> = { confirmed: "bg-mint text-teal-deep", checked_in: "bg-gold/25 text-teal-dark", completed: "bg-teal text-white", late: "bg-rose-soft/20 text-rose-soft", no_show: "bg-ink/10 text-ink/60" };
 
 export default function ReceptionApp() {
   const [authed, setAuthed] = useState<boolean | null>(null), [password, setPassword] = useState(""), [error, setError] = useState(""), [busy, setBusy] = useState(false);
@@ -24,7 +24,7 @@ export default function ReceptionApp() {
   useEffect(() => { if (authed) { loadCatalog(); loadApps(); } }, [authed]);
   useEffect(() => { if (authed) loadApps(); }, [date, deptId, doctorId]);
   const filteredDocs = useMemo(() => deptId ? docs.filter((d) => String(d.departmentId) === deptId) : docs, [docs, deptId]);
-  const visible = apps.filter((a) => !search || `${a.patientName} ${a.phone} ${a.refCode}`.toLowerCase().includes(search.toLowerCase()));
+  const visible = apps.filter((a) => !search || `${a.patientName} ${a.phone} ${a.refCode}`.toLowerCase().includes(search.toLowerCase())).sort((a, b) => { if (a.doctorId !== b.doctorId) return a.doctorId - b.doctorId; if (a.queueMode === "arrival" && a.queueMode === b.queueMode) { if (a.checkedInAt && b.checkedInAt) return new Date(a.checkedInAt).getTime() - new Date(b.checkedInAt).getTime(); if (a.checkedInAt) return -1; if (b.checkedInAt) return 1; } return a.time.localeCompare(b.time); });
   const fetchSlots = async (doc: string, day: string, setter: (v: Slot[]) => void) => { if (!doc || !day) { setter([]); return; } const r = await fetch(`/api/slots?doctorId=${doc}&date=${day}`); const d = await r.json(); setter(d.ok ? (d.slots || []).filter((s: Slot) => !s.booked) : []); };
   const add = async () => { setBusy(true); setMessage(""); const r = await fetch("/api/reception/appointments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) }); const d = await r.json(); if (r.ok) { setMessage(`تم إنشاء الحجز ${d.appointment?.refCode || ""}`); setShowAdd(false); setForm({ doctorId: "", date: todayCairo(), time: "", patientName: "", phone: "", address: "", age: "", visitType: "new", notes: "" }); await loadApps(); } else setMessage(d.message || "تعذر إنشاء الحجز"); setBusy(false); };
   const status = async (id: number, value: string) => { await fetch(`/api/reception/appointments/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: value }) }); loadApps(); };

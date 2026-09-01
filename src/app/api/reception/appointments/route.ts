@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   if (isDateStr(date)) conditions.push(eq(appointments.date, date));
   if (Number.isInteger(doctorId) && doctorId > 0) conditions.push(eq(appointments.doctorId, doctorId));
   if (Number.isInteger(departmentId) && departmentId > 0) conditions.push(eq(doctors.departmentId, departmentId));
-  const rows = await db.select({ a: appointments, doctorName: doctors.name, doctorTitle: doctors.title, departmentName: departments.name, departmentColor: departments.color })
+  const rows = await db.select({ a: appointments, doctorName: doctors.name, doctorTitle: doctors.title, departmentName: departments.name, departmentColor: departments.color, queueMode: doctors.queueMode })
     .from(appointments).innerJoin(doctors, eq(appointments.doctorId, doctors.id)).innerJoin(departments, eq(doctors.departmentId, departments.id))
     .where(conditions.length ? and(...conditions) : undefined).orderBy(asc(appointments.date), asc(appointments.time)).limit(500);
   return NextResponse.json({ ok: true, appointments: rows.map(({ a, ...extra }) => ({ ...a, ...extra })) });

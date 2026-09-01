@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Clock,
+  ClipboardList,
   KeyRound,
   MapPin,
   Phone,
@@ -119,6 +120,18 @@ export default function Footer() {
                 <span className="block text-xs text-cream/55">
                   دخول مساعدي الأطباء برقم الكود
                 </span>
+              </span>
+            </Link>
+            <Link
+              href="/reception"
+              className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-gold/40 hover:bg-white/10"
+            >
+              <span className="grid size-10 place-items-center rounded-xl bg-teal text-gold-light">
+                <ClipboardList size={18} />
+              </span>
+              <span>
+                <span className="block text-sm font-extrabold text-white">صفحة الاستقبال</span>
+                <span className="block text-xs text-cream/55">متابعة كل الحجوزات والحجز اليدوي</span>
               </span>
             </Link>
             <Link

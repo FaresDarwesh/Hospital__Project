@@ -62,6 +62,7 @@ export async function GET() {
       image: d.image,
       reservationFee: d.reservationFee,
       active: d.active,
+      queueMode: d.queueMode === "arrival" ? "arrival" : "exact",
       schedules: scheds
         .filter((s) => s.doctorId === d.id)
         .map((s) => ({
@@ -89,6 +90,7 @@ export async function POST(req: Request) {
   let image = String(body.image ?? "").trim();
   if (image && !/^\/images\/[\w.\-]+$/.test(image)) image = "";
   const reservationFee = String(body.reservationFee ?? "").trim().slice(0, 40) || "كشف رمزي";
+  const queueMode = body.queueMode === "arrival" ? "arrival" : "exact";
   let code = String(body.code ?? "").trim().toUpperCase().slice(0, 12);
   const schedInput = validSchedules(body.schedules);
 
@@ -135,7 +137,7 @@ export async function POST(req: Request) {
   const created = await db.transaction(async (tx) => {
     const [doc] = await tx
       .insert(doctors)
-      .values({ name, title, departmentId, code, bio, image, reservationFee })
+      .values({ name, title, departmentId, code, bio, image, reservationFee, queueMode })
       .returning();
     await tx.insert(schedules).values(
       schedInput.map((s) => ({ ...s, doctorId: doc.id }))

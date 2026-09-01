@@ -31,6 +31,7 @@ export type DoctorDTO = {
   image: string;
   reservationFee: string;
   active: boolean;
+  queueMode: "exact" | "arrival";
   schedules: ScheduleDTO[];
 };
 
@@ -49,12 +50,14 @@ export type AppointmentDTO = {
   age: number;
   visitType: "new" | "followup";
   notes: string;
-  status: "confirmed" | "checked_in" | "completed" | "no_show";
+  status: "confirmed" | "checked_in" | "completed" | "no_show" | "late";
+  checkedInAt?: string | null;
   createdAt?: string;
   doctorName?: string;
   doctorTitle?: string;
   departmentName?: string;
   departmentColor?: string;
+  queueMode?: "exact" | "arrival";
 };
 
 export const STATUS_LABELS: Record<string, string> = {
@@ -62,4 +65,5 @@ export const STATUS_LABELS: Record<string, string> = {
   checked_in: "بالداخل",
   completed: "تم الكشف",
   no_show: "لم يحضر",
+  late: "متأخر — بعد 4 أدوار",
 };

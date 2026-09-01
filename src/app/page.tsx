@@ -65,6 +65,7 @@ export default async function HomePage() {
     image: d.image,
     reservationFee: "كشف رمزي",
     active: true,
+    queueMode: "exact",
     schedules: [],
   }));
 
@@ -90,6 +91,7 @@ export default async function HomePage() {
     image: d.image,
     reservationFee: d.reservationFee,
     active: d.active,
+    queueMode: d.queueMode === "arrival" ? "arrival" : "exact",
     schedules: schedRows
       .filter((s) => s.doctorId === d.id)
       .map((s) => ({
