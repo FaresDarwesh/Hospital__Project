@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
-function requiredEnv(name: "SESSION_SECRET" | "ADMIN_PASSWORD"): string {
+function requiredEnv(name: "SESSION_SECRET" | "ADMIN_PASSWORD" | "RECEPTION_PASSWORD"): string {
   const value = process.env[name];
   if (!value) throw new Error(`${name} environment variable is required`);
   return value;
@@ -9,6 +9,7 @@ function requiredEnv(name: "SESSION_SECRET" | "ADMIN_PASSWORD"): string {
 
 const SECRET = requiredEnv("SESSION_SECRET");
 export const ADMIN_PASSWORD = requiredEnv("ADMIN_PASSWORD");
+export const RECEPTION_PASSWORD = requiredEnv("RECEPTION_PASSWORD");
 
 export function hashAccessPassword(password: string): string {
   return crypto.createHash("sha256").update(password, "utf8").digest("hex");
@@ -16,6 +17,7 @@ export function hashAccessPassword(password: string): string {
 
 const ADMIN_COOKIE = "bn_admin_token";
 const ASSISTANT_COOKIE = "bn_assistant_token";
+const RECEPTION_COOKIE = "bn_reception_token";
 const MAX_AGE = 60 * 60 * 24 * 7; // أسبوع
 
 function hmac(data: string): string {
@@ -79,6 +81,27 @@ export async function clearAdminCookie(): Promise<void> {
 export async function clearAssistantCookie(): Promise<void> {
   const store = await cookies();
   store.delete(ASSISTANT_COOKIE);
+}
+
+export async function setReceptionCookie(): Promise<void> {
+  const store = await cookies();
+  store.set(RECEPTION_COOKIE, signToken("reception"), {
+    httpOnly: true,
+    secure: SECURE,
+    sameSite: "lax",
+    path: "/",
+    maxAge: MAX_AGE,
+  });
+}
+
+export async function clearReceptionCookie(): Promise<void> {
+  const store = await cookies();
+  store.delete(RECEPTION_COOKIE);
+}
+
+export async function isReception(): Promise<boolean> {
+  const store = await cookies();
+  return !!verifyToken(store.get(RECEPTION_COOKIE)?.value, "reception");
 }
 
 export async function isAdmin(): Promise<boolean> {
